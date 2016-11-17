@@ -39,3 +39,60 @@ module Console =
             | None ->
                 printfn "No output"
         } |> Async.RunSynchronously
+        
+    let parseRequest (input : System.String) =
+        let parts = input.Split([|';'|])
+        let rawType = parts.[0]
+        let route = parts.[1]
+        match rawType with
+        | "GET" -> { Type = GET; Route = route }
+        | "POST" -> { Type = POST; Route = route }
+        | _ -> failwith "invalid request"
+        
+    let executeInLoop inputContext webpart = 
+        let mutable continueLooping = true
+        while continueLooping do
+            printf "Enter Input Route : "
+            let input = System.Console.ReadLine()
+            try
+                if input = "exit" then
+                    continueLooping <- false
+                else
+                    let context = { inputContext with Request = parseRequest input }
+                    execute context webpart
+            with
+                | ex ->
+                    printfn "Error : %s" ex.Message
+                    
+module Combinators =
+    let (>=>) first second context = async {
+        let! firstContext = first context
+        match firstContext with
+        | None -> return None
+        | Some context -> 
+            let! secondContext = second context
+            return secondContext
+    }
+    
+module Filters =
+    open Http
+    
+    let iff condition context =
+        if condition context then
+            context |> Some |> async.Return
+        else
+            None |> async.Return
+            
+    let GET = iff (fun context -> context.Request.Type = GET)
+    let POST = iff (fun context -> context.Request.Type = POST)
+    let Path path = iff (fun context -> context.Request.Route = path)
+    
+    let rec Choose webparts context = async {
+        match webparts with
+        | [] -> return None
+        | x :: xs -> 
+            let! result = x context
+            match result with
+            | Some x -> return Some x
+            | None -> return! Choose xs context
+    }
