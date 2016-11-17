@@ -1,0 +1,15 @@
+﻿<Properties StartupConfiguration="{561C7158-77D9-4699-BFE2-4724A180FDF6}|Default">
+  <MonoDevelop.Ide.ItemProperties.Mini.Suave PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Mini.Suave/Suave.fs">
+    <Files>
+      <File FileName="Mini.Suave/Program.fs" Line="5" Column="15" />
+      <File FileName="Mini.Suave/Suave.fs" Line="4" Column="18" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
